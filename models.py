@@ -31,6 +31,17 @@ class User(db.Model):
             last_name=last_name,
         )
 
+    @classmethod
+    def authenticate(cls, username, password):
+        """Validate that user exists & password is correct"""
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            return user
+        else:
+            return False
+
     username = db.Column(db.String(20), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)

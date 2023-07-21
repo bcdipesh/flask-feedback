@@ -2,7 +2,7 @@
 
 from flask import Flask, redirect, render_template, session
 from models import db, connect_db, User
-from forms import RegistrationForm
+from forms import RegistrationForm, LoginForm
 from dotenv import load_dotenv
 import os
 
@@ -27,6 +27,34 @@ def home():
     """Home route"""
 
     return redirect("/register")
+
+
+@app.route("/login")
+def login():
+    """User login page"""
+
+    form = LoginForm()
+
+    return render_template("login.html", form=form)
+
+
+@app.route("/login", methods=["POST"])
+def authenticate():
+    """Authenticate user"""
+
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        user = User.authenticate(username, password)
+
+        if user:
+            session["username"] = user.username
+            return redirect("/secret")
+
+    return render_template("login.html", form=form)
 
 
 @app.route("/register")
@@ -57,6 +85,8 @@ def save_user():
             session["username"] = new_user.username
 
         return redirect("/secret")
+
+    return render_template("register.html", form=form)
 
 
 @app.route("/secret")
