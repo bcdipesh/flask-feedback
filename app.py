@@ -96,7 +96,7 @@ def save_user():
 def profile(username):
     """User profile page that displays details of the user"""
 
-    if username == session["username"]:
+    if "username" in session and username == session["username"]:
         user = User.query.get_or_404(username)
         feedbacks = Feedback.query.filter_by(username=username).all()
 
@@ -109,7 +109,7 @@ def profile(username):
 def delete_account(username):
     """Remove the user from the database along with their feedbacks, session and redirect to home page"""
 
-    if username == session["username"]:
+    if "username" in session and username == session["username"]:
         Feedback.query.filter_by(username=username).delete()
         User.query.filter_by(username=username).delete()
 
