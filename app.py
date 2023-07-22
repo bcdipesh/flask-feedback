@@ -1,8 +1,8 @@
 """Flask app for User Feedback"""
 
 from flask import Flask, redirect, render_template, session
-from models import db, connect_db, User
-from forms import RegistrationForm, LoginForm
+from models import db, connect_db, User, Feedback
+from forms import RegistrationForm, LoginForm, FeedbackForm
 from dotenv import load_dotenv
 import os
 
@@ -18,6 +18,9 @@ app.config[
 app.config["SQLALCHEMY_ECHO"] = True
 
 connect_db(app)
+
+with app.app_context():
+    db.create_all()
 
 # API routes
 
@@ -108,3 +111,37 @@ def logout():
     session.pop("username")
 
     return redirect("/")
+
+
+@app.route("/users/<string:username>/feedback/add")
+def feedback_form(username):
+    """Display a form to add feedback"""
+
+    if "username" in session:
+        form = FeedbackForm()
+
+        return render_template("add_feedback.html", form=form, username=username)
+
+    return redirect("/login")
+
+
+@app.route("/users/<string:username>/feedback/add", methods=["POST"])
+def add_feedback(username):
+    """Add a new piece of feedback to the database and redirect to users profile page"""
+
+    if "username" in session and username == session["username"]:
+        form = FeedbackForm()
+
+        if form.validate_on_submit():
+            title = form.title.data
+            content = form.content.data
+
+            new_feedback = Feedback(title=title, content=content, username=username)
+
+            with app.app_context():
+                db.session.add(new_feedback)
+                db.session.commit()
+
+            return redirect(f"/users/{username}")
+
+    return redirect("/login")

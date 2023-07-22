@@ -1,7 +1,7 @@
 """Form models for templates"""
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length
 
 
@@ -20,3 +20,10 @@ class LoginForm(FlaskForm):
 
     username = StringField("Username", validators=[DataRequired(), Length(max=20)])
     password = PasswordField("Password", validators=[DataRequired()])
+
+
+class FeedbackForm(FlaskForm):
+    """Feedback form to add user feedback"""
+
+    title = StringField("Title", validators=[DataRequired(), Length(max=100)])
+    content = TextAreaField("Content", validators=[DataRequired()])
