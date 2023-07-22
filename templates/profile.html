@@ -11,6 +11,16 @@
         <div class="card-body">
             <div class="card-title">Full Name: {{user.first_name}} {{user.last_name}}</div>
             <div class="card-text">Email Address: {{user.email}}</div>
+
+            <h4 class="mt-4">Feedbacks</h4>
+            <div class="list-group">
+                {% for feedback in feedbacks %}
+                <a href="/feedbacks/{{feedback.id}}/update" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{feedback.title}}</h5>
+                    <p class="mb-1">{{feedback.content}}</p>
+                </a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

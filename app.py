@@ -98,8 +98,9 @@ def profile(username):
 
     if "username" in session and username == session["username"]:
         user = User.query.get_or_404(username)
+        feedbacks = Feedback.query.filter_by(username=username).all()
 
-        return render_template("profile.html", user=user)
+        return render_template("profile.html", user=user, feedbacks=feedbacks)
 
     return redirect("/login")
 
