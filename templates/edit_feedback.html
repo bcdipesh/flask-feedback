@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} | Update Feedback{% endblock %}
+
+{% block content %}
+<div class="container add-feedback">
+    <h1>Update Feedback</h1>
+
+    <form action="/feedbacks/{{feedback_id}}/update" method="post">
+        {{ form.hidden_tag() }}
+
+        {% for field in form if field.widget.input_type != 'hidden' %}
+        <div class="form-group">
+            {{field.label(class_="mt-4")}}
+            {{field(class_="form-control")}}
+
+            {% for err in field.errors %}
+            <small class="form-text text-danger">{{err}}</small>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <button class="btn btn-primary mt-4" type="submit">Update Feedback</button>
+    </form>
+</div>
+{% endblock %}

@@ -139,10 +139,51 @@ def add_feedback(username):
 
             new_feedback = Feedback(title=title, content=content, username=username)
 
-            with app.app_context():
-                db.session.add(new_feedback)
-                db.session.commit()
+            db.session.add(new_feedback)
+            db.session.commit()
 
             return redirect(f"/users/{username}")
+
+    return redirect("/login")
+
+
+@app.route("/feedbacks/<int:feedback_id>/update")
+def edit_feedback_form(feedback_id):
+    """Display a form to edit feedback"""
+
+    if "username" in session:
+        feedback = Feedback.query.get_or_404(feedback_id)
+
+        if feedback.username == session["username"]:
+            form = FeedbackForm(obj=feedback)
+
+            return render_template(
+                "edit_feedback.html", form=form, feedback_id=feedback_id
+            )
+
+    return redirect("/login")
+
+
+@app.route("/feedbacks/<int:feedback_id>/update", methods=["POST"])
+def update_feedback(feedback_id):
+    """Update a specific feedback and redirect to users profile page"""
+
+    if "username" in session:
+        feedback = Feedback.query.get_or_404(feedback_id)
+
+        if feedback.username == session["username"]:
+            form = FeedbackForm()
+
+            if form.validate_on_submit():
+                feedback.title = form.title.data
+                feedback.content = form.content.data
+
+                db.session.commit()
+
+                return redirect(f"/users/{feedback.username}")
+            else:
+                return render_template(
+                    "edit_feedback.html", form=form, feedback_id=feedback_id
+                )
 
     return redirect("/login")
