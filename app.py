@@ -93,4 +93,7 @@ def save_user():
 def secret_page():
     """A secret page only authenticated users can see"""
 
-    return render_template("secret.html")
+    if "username" in session:
+        return render_template("secret.html")
+
+    return redirect("/login")
