@@ -52,7 +52,7 @@ def authenticate():
 
         if user:
             session["username"] = user.username
-            return redirect("/secret")
+            return redirect(f"/users/{user.username}")
 
     return render_template("login.html", form=form)
 
@@ -84,17 +84,19 @@ def save_user():
             db.session.commit()
             session["username"] = new_user.username
 
-        return redirect("/secret")
+        return redirect(f"/users/{new_user.username}")
 
     return render_template("register.html", form=form)
 
 
-@app.route("/secret")
-def secret_page():
-    """A secret page only authenticated users can see"""
+@app.route("/users/<string:username>")
+def profile(username):
+    """User profile page that displays details of the user"""
 
-    if "username" in session:
-        return render_template("secret.html")
+    if "username" in session and username == session["username"]:
+        user = User.query.get_or_404(username)
+
+        return render_template("profile.html", user=user)
 
     return redirect("/login")
 

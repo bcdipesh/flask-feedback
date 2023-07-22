@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} | Profile Page {% endblock %}
+
+{% block content %}
+<div class="container secret">
+    <h1>Profile Page</h1>
+
+    <div class="card border-primary my-4">
+        <div class="card-header">Username: {{user.username}}</div>
+        <div class="card-body">
+            <div class="card-title">Full Name: {{user.first_name}} {{user.last_name}}</div>
+            <div class="card-text">Email Address: {{user.email}}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
