@@ -18,16 +18,18 @@
                 <a href="/feedbacks/{{feedback.id}}/update" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{feedback.title}}</h5>
-                        <small>
-                            <form action="/feedbacks/{{feedback.id}}/delete" method="post">
-                                <button class="btn btn-danger">Delete</button>
-                            </form>
-                        </small>
+                        <form action="/feedbacks/{{feedback.id}}/delete" method="post">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                     <p class="mb-1">{{feedback.content}}</p>
                 </a>
                 {% endfor %}
             </div>
+
+            <form class="mt-4" action="/users/{{user.username}}/delete" method="post">
+                <button class="btn btn-danger">Delete Account</button>
+            </form>
         </div>
     </div>
 </div>

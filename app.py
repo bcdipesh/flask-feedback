@@ -96,13 +96,28 @@ def save_user():
 def profile(username):
     """User profile page that displays details of the user"""
 
-    if "username" in session and username == session["username"]:
+    if username == session["username"]:
         user = User.query.get_or_404(username)
         feedbacks = Feedback.query.filter_by(username=username).all()
 
         return render_template("profile.html", user=user, feedbacks=feedbacks)
 
     return redirect("/login")
+
+
+@app.route("/users/<string:username>/delete", methods=["POST"])
+def delete_account(username):
+    """Remove the user from the database along with their feedbacks, session and redirect to home page"""
+
+    if username == session["username"]:
+        Feedback.query.filter_by(username=username).delete()
+        User.query.filter_by(username=username).delete()
+
+        session.pop("username")
+
+        db.session.commit()
+
+    return redirect("/")
 
 
 @app.route("/logout")
@@ -114,7 +129,7 @@ def logout():
     return redirect("/")
 
 
-@app.route("/users/<string:username>/feedback/add")
+@app.route("/users/<string:username>/feedbacks/add")
 def feedback_form(username):
     """Display a form to add feedback"""
 
@@ -126,7 +141,7 @@ def feedback_form(username):
     return redirect("/login")
 
 
-@app.route("/users/<string:username>/feedback/add", methods=["POST"])
+@app.route("/users/<string:username>/feedbacks/add", methods=["POST"])
 def add_feedback(username):
     """Add a new piece of feedback to the database and redirect to users profile page"""
 

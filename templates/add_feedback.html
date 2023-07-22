@@ -6,7 +6,7 @@
 <div class="container add-feedback">
     <h1>Add Feedback</h1>
 
-    <form action="/users/{{username}}/feedback/add" method="post">
+    <form action="/users/{{username}}/feedbacks/add" method="post">
         {{ form.hidden_tag() }}
 
         {% for field in form if field.widget.input_type != 'hidden' %}
